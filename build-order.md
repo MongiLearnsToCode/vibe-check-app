@@ -46,29 +46,29 @@ Each main task includes subtasks to guide development, testing, and deployment.
 
 ## ✅ 3. Frontend Project Setup
 
-- [ ] Create React app: `npm create vite@latest frontend -- --template react-ts`
-- [ ] Install dependencies:
-  - [ ] `axios` for API calls
-  - [ ] `tailwindcss`, `postcss`, `autoprefixer`
-  - [ ] `@headlessui/react`, `@heroicons/react`
-- [ ] Initialize Tailwind: `npx tailwindcss init -p`
-- [ ] Set up shadcn/ui (optional components: Button, Card, Input, Label)
-- [ ] Configure `vite.config.ts` with:
-  - [ ] Base path for Laravel proxy (if needed)
-  - [ ] TypeScript and React plugin support
+- [x] Create React app: `npm create vite@latest frontend -- --template react-ts`
+- [x] Install dependencies:
+  - [x] `axios` for API calls
+  - [x] `tailwindcss`, `postcss`, `autoprefixer`
+  - [x] `@headlessui/react`, `@heroicons/react`
+- [x] Initialize Tailwind: `npx tailwindcss init -p`
+- [x] Set up shadcn/ui (optional components: Button, Card, Input, Label)
+- [x] Configure `vite.config.ts` with:
+  - [x] Base path for Laravel proxy (if needed)
+  - [x] TypeScript and React plugin support
 
 ---
 
 ## ✅ 4. PWA Integration
 
-- [ ] Install Vite PWA plugin: `npm install vite-plugin-pwa -D`
-- [ ] Configure plugin in `vite.config.ts`:
-  - [ ] App name, short name, theme color
-  - [ ] Icons (192x192, 512x512) in `/public/icons/`
-  - [ ] Generate `manifest.json` and service worker
-- [ ] Add `manifest.json` to `/public/`
-- [ ] Verify PWA install prompt appears in browser
-- [ ] Test offline caching of core assets (HTML, CSS, JS)
+- [x] Install Vite PWA plugin: `npm install vite-plugin-pwa -D`
+- [x] Configure plugin in `vite.config.ts`:
+  - [x] App name, short name, theme color
+  - [x] Icons (192x192, 512x512) in `/public/icons/`
+  - [x] Generate `manifest.json` and service worker
+- [x] Add `manifest.json` to `/public/`
+- [x] Verify PWA install prompt appears in browser
+- [x] Test offline caching of core assets (HTML, CSS, JS)
 
 ---
 
