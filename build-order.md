@@ -24,23 +24,23 @@ Each main task includes subtasks to guide development, testing, and deployment.
 
 ## ✅ 2. API Endpoint Development
 
-- [ ] Define API routes in `routes/api.php`
-- [ ] Apply `auth:sanctum` or session middleware where needed
+- [x] Define API routes in `routes/api.php`
+- [x] Apply `auth:sanctum` or session middleware where needed
 
 ### Subtask: Authentication Endpoints
-- [ ] `POST /api/auth/register` – Register user and start session
-- [ ] `POST /api/auth/login` – Log in and return session
-- [ ] `POST /api/auth/logout` – Optional, for clean session handling
+- [x] `POST /api/auth/register` – Register user and start session
+- [x] `POST /api/auth/login` – Log in and return session
+- [x] `POST /api/auth/logout` – Optional, for clean session handling
 
 ### Subtask: Relationship Management
-- [ ] `POST /api/relationships` – Authenticated user creates a relationship, generates unique invite `code`
-- [ ] `POST /api/relationships/join` – User joins using invite `code`, creates pivot record
+- [x] `POST /api/relationships` – Authenticated user creates a relationship, generates unique invite `code`
+- [x] `POST /api/relationships/join` – User joins using invite `code`, creates pivot record
 
 ### Subtask: Vibe Submission & Retrieval
-- [ ] `POST /api/vibes` – Submit daily vibe (mood 1–5, optional note)
-  - [ ] Enforce one entry per user per day
-- [ ] `GET /api/vibes/{relationshipId}` – Return today’s vibe + past 7 days grouped by date
-  - [ ] Format response as `{ date: "2025-04-05", userA: { mood, note }, userB: { mood, note } }`
+- [x] `POST /api/vibes` – Submit daily vibe (mood 1–5, optional note)
+  - [x] Enforce one entry per user per day
+- [x] `GET /api/vibes/{relationshipId}` – Return today’s vibe + past 7 days grouped by date
+  - [x] Format response as `{ date: "2025-04-05", userA: { mood, note }, userB: { mood, note } }`
 
 ---
 
