@@ -84,7 +84,7 @@ Each main task includes subtasks to guide development, testing, and deployment.
 - [x] Create `VibeCheck` component
 - [x] Implement emoji slider (1–5: 😩 → 😊)
 - [x] Add optional text input (max 140 characters)
-- [ ] Disable submit if entry already exists for today
+- [x] Disable submit if entry already exists for today
 - [x] Show success confirmation
 
 ### Subtask: Dashboard
