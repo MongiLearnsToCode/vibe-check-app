@@ -12,8 +12,31 @@ export default function VibeCheckForm() {
   const [note, setNote] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [offlineMessage, setOfflineMessage] = useState('');
+  const [alreadySubmitted, setAlreadySubmitted] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const checkIfAlreadySubmitted = async () => {
+      // TODO: Get relationshipId from somewhere
+      const relationshipId = 1;
+      
+      try {
+        // Check if user has already submitted a vibe today
+        // For now, we'll just simulate this check
+        // In a real implementation, we would call an API endpoint to check this
+        // Example API call:
+        // const response = await api.get(`/vibes/${relationshipId}/check`);
+        // setAlreadySubmitted(response.data.alreadySubmitted);
+        
+        // Simulating the check for now
+        setAlreadySubmitted(false);
+      } catch (error) {
+        console.error("Failed to check if vibe already submitted", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     const syncPendingVibes = async () => {
       const pendingVibes = getPendingVibes();
       if (pendingVibes.length > 0) {
@@ -26,6 +49,7 @@ export default function VibeCheckForm() {
       }
     };
 
+    checkIfAlreadySubmitted();
     syncPendingVibes();
     window.addEventListener('online', syncPendingVibes);
     return () => window.removeEventListener('online', syncPendingVibes);
@@ -41,11 +65,17 @@ export default function VibeCheckForm() {
       try {
         await api.post('/vibes', vibe);
         setSubmitted(true);
-      } catch (error) {
-        console.error(error);
-        savePendingVibe(vibe);
-        setOfflineMessage('Vibe saved offline. Will sync when online.');
-        setSubmitted(true);
+        setAlreadySubmitted(true);
+      } catch (error: any) {
+        if (error.response && error.response.status === 409) {
+          // Conflict - already submitted today
+          setAlreadySubmitted(true);
+        } else {
+          console.error(error);
+          savePendingVibe(vibe);
+          setOfflineMessage('Vibe saved offline. Will sync when online.');
+          setSubmitted(true);
+        }
       }
     } else {
       savePendingVibe(vibe);
@@ -56,6 +86,32 @@ export default function VibeCheckForm() {
 
   const emojis = ['😩', '😟', '😐', '🙂', '😊'];
 
+  if (loading) {
+    return (
+      <Card className="mx-auto max-w-sm">
+        <CardHeader>
+          <CardTitle className="text-2xl">Loading...</CardTitle>
+          <CardDescription>
+            Checking your vibe status for today.
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  if (alreadySubmitted) {
+    return (
+      <Card className="mx-auto max-w-sm">
+        <CardHeader>
+          <CardTitle className="text-2xl">Vibe Already Submitted</CardTitle>
+          <CardDescription>
+            You've already checked in today. Come back tomorrow!
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
   if (submitted) {
     return (
       <Card className="mx-auto max-w-sm">
@@ -65,8 +121,7 @@ export default function VibeCheckForm() {
             {offlineMessage || 'Thanks for checking in. See you tomorrow!'}
           </CardDescription>
         </CardHeader>
-      </CardContent>
-    </Card>
+      </Card>
     );
   }
 
