@@ -75,23 +75,23 @@ Each main task includes subtasks to guide development, testing, and deployment.
 ## ✅ 5. Frontend Pages & Components
 
 ### Subtask: Authentication Flow
-- [ ] Create `Signup` page (name, email, password)
-- [ ] Create `Login` page
-- [ ] Connect forms to Laravel API endpoints
-- [ ] Handle CSRF tokens (Laravel includes via `/sanctum/csrf-cookie`)
+- [x] Create `Signup` page (name, email, password)
+- [x] Create `Login` page
+- [x] Connect forms to Laravel API endpoints
+- [x] Handle CSRF tokens (Laravel includes via `/sanctum/csrf-cookie`)
 
 ### Subtask: Vibe Check Page
-- [ ] Create `VibeCheck` component
-- [ ] Implement emoji slider (1–5: 😩 → 😊)
-- [ ] Add optional text input (max 140 characters)
+- [x] Create `VibeCheck` component
+- [x] Implement emoji slider (1–5: 😩 → 😊)
+- [x] Add optional text input (max 140 characters)
 - [ ] Disable submit if entry already exists for today
-- [ ] Show success confirmation
+- [x] Show success confirmation
 
 ### Subtask: Dashboard
-- [ ] Create `Dashboard` page
-- [ ] Fetch and display today’s vibes side by side
-- [ ] Render 7-day mood line chart using Recharts
-- [ ] Display static insight (e.g., “You’re both feeling balanced this week.”)
+- [x] Create `Dashboard` page
+- [x] Fetch and display today's vibes side by side
+- [x] Render 7-day mood line chart using Recharts
+- [x] Display static insight (e.g., "You're both feeling balanced this week.")
 
 ---
 
