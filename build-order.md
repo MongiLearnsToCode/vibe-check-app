@@ -127,18 +127,18 @@ Each main task includes subtasks to guide development, testing, and deployment.
 ## ✅ 8. Deployment
 
 ### Subtask: Backend Deployment
-- [ ] Deploy Laravel app to Laravel Forge / VPS / shared hosting
-- [ ] Set up domain and SSL
-- [ ] Configure `.env` (APP_URL, DB, etc.)
-- [ ] Run `php artisan migrate` on production
-- [ ] Verify API endpoints are accessible
+- [x] Deploy Laravel app to Laravel Forge / VPS / shared hosting
+- [x] Set up domain and SSL
+- [x] Configure `.env` (APP_URL, DB, etc.)
+- [x] Run `php artisan migrate` on production
+- [x] Verify API endpoints are accessible
 
 ### Subtask: Frontend Deployment
-- [ ] Build frontend: `npm run build`
-- [ ] Deploy to Vercel or Netlify
-- [ ] Or serve via Laravel (if using Inertia.js in future)
-- [ ] Set up custom domain and HTTPS
-- [ ] Verify PWA manifest and installability
+- [x] Build frontend: `npm run build`
+- [x] Deploy to Vercel or Netlify
+- [x] Or serve via Laravel (if using Inertia.js in future)
+- [x] Set up custom domain and HTTPS
+- [x] Verify PWA manifest and installability
 
 ---
 
