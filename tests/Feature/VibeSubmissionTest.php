@@ -5,13 +5,10 @@ namespace Tests\Feature;
 use App\Models\User;
 use App\Models\Relationship;
 use App\Models\Vibe;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class VibeSubmissionTest extends TestCase
 {
-    use RefreshDatabase;
-
     public function test_vibe_submission_fails_when_already_submitted_today()
     {
         $user = User::factory()->create();
