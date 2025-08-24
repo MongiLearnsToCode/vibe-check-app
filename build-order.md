@@ -144,17 +144,17 @@ Each main task includes subtasks to guide development, testing, and deployment.
 
 ## ✅ 9. Closed Beta Testing
 
-- [ ] Recruit 5–10 real couples
-- [ ] Provide onboarding instructions
-- [ ] Monitor key metrics:
-  - [ ] Activation rate (joined relationships)
-  - [ ] Daily check-in rate
-  - [ ] Retention at day 30
-- [ ] Collect qualitative feedback:
-  - [ ] Is the vibe check easy and fast?
-  - [ ] Do partners feel more connected?
-  - [ ] Any bugs or UX issues?
-- [ ] Review backend logs for errors
+- [x] Recruit 5–10 real couples
+- [x] Provide onboarding instructions
+- [x] Monitor key metrics:
+  - [x] Activation rate (joined relationships)
+  - [x] Daily check-in rate
+  - [x] Retention at day 30
+- [x] Collect qualitative feedback:
+  - [x] Is the vibe check easy and fast?
+  - [x] Do partners feel more connected?
+  - [x] Any bugs or UX issues?
+- [x] Review backend logs for errors
 
 ---
 
