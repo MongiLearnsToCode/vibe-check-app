@@ -4,10 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/com
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { Slider } from "~/components/ui/slider";
-import api from "~/lib/api";
-import { getPendingVibes, savePendingVibe, clearPendingVibes } from "~/lib/offline";
+import api, { checkVibeSubmission } from "~/lib/api";
+import { getPendingVibes, savePendingVibe, clearPendingVibes, type PendingVibe } from "~/lib/offline";
+import { useUser } from "~/contexts/UserContext";
 
 export default function VibeCheckForm() {
+  const { relationship } = useUser();
   const [mood, setMood] = useState(3);
   const [note, setNote] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -17,20 +19,15 @@ export default function VibeCheckForm() {
 
   useEffect(() => {
     const checkIfAlreadySubmitted = async () => {
-      // TODO: Get relationshipId from somewhere
-      const relationshipId = 1;
-      
+      if (!relationship) {
+        setLoading(false);
+        return;
+      }
+
       try {
-        // Check if user has already submitted a vibe today
-        // For now, we'll just simulate this check
-        // In a real implementation, we would call an API endpoint to check this
-        // Example API call:
-        // const response = await api.get(`/vibes/${relationshipId}/check`);
-        // setAlreadySubmitted(response.data.alreadySubmitted);
-        
-        // Simulating the check for now
-        setAlreadySubmitted(false);
-      } catch (error) {
+        const response = await checkVibeSubmission();
+        setAlreadySubmitted(response.data.submitted);
+      } catch (error: any) {
         console.error("Failed to check if vibe already submitted", error);
       } finally {
         setLoading(false);
@@ -38,28 +35,67 @@ export default function VibeCheckForm() {
     };
 
     const syncPendingVibes = async () => {
+      if (!relationship) return;
+      
       const pendingVibes = getPendingVibes();
       if (pendingVibes.length > 0) {
-        try {
-          await Promise.all(pendingVibes.map(vibe => api.post('/vibes', vibe)));
-          clearPendingVibes();
-        } catch (error) {
-          console.error('Failed to sync pending vibes', error);
+        // Filter vibes for current relationship
+        const relationshipVibes = pendingVibes.filter(vibe => vibe.relationship_id === relationship.id);
+        
+        // Sync each vibe
+        const syncedVibes: PendingVibe[] = [];
+        for (const vibe of relationshipVibes) {
+          try {
+            await api.post('/vibes', {
+              mood: vibe.mood,
+              note: vibe.note
+            });
+            syncedVibes.push(vibe);
+          } catch (error: any) {
+            console.error('Failed to sync vibe', error);
+            // If it's a conflict (409), we still want to remove it from pending
+            if (error.response && error.response.status === 409) {
+              syncedVibes.push(vibe);
+            }
+            // For other errors, we'll keep it in pendingVibes
+          }
+        }
+        
+        // Remove synced vibes from localStorage
+        if (syncedVibes.length > 0) {
+          const remainingVibes = pendingVibes.filter(vibe => 
+            !syncedVibes.some(synced => synced.timestamp === vibe.timestamp)
+          );
+          if (remainingVibes.length === 0) {
+            clearPendingVibes();
+          } else {
+            localStorage.setItem('pendingVibes', JSON.stringify(remainingVibes));
+          }
+          console.log(`${syncedVibes.length} pending vibes synced successfully`);
         }
       }
     };
 
     checkIfAlreadySubmitted();
     syncPendingVibes();
-    window.addEventListener('online', syncPendingVibes);
-    return () => window.removeEventListener('online', syncPendingVibes);
-  }, []);
+    
+    // Set up event listener for when coming back online
+    const handleOnline = () => syncPendingVibes();
+    window.addEventListener('online', handleOnline);
+    
+    return () => window.removeEventListener('online', handleOnline);
+  }, [relationship]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Get relationshipId from somewhere
-    const relationshipId = 1;
-    const vibe = { mood, note, relationship_id: relationshipId };
+    
+    if (!relationship) {
+      console.error("No relationship found");
+      return;
+    }
+    
+    const vibe = { mood, note };
+    const vibeWithRelationship = { ...vibe, relationship_id: relationship.id };
 
     if (navigator.onLine) {
       try {
@@ -72,13 +108,13 @@ export default function VibeCheckForm() {
           setAlreadySubmitted(true);
         } else {
           console.error(error);
-          savePendingVibe(vibe);
+          savePendingVibe(vibeWithRelationship);
           setOfflineMessage('Vibe saved offline. Will sync when online.');
           setSubmitted(true);
         }
       }
     } else {
-      savePendingVibe(vibe);
+      savePendingVibe(vibeWithRelationship);
       setOfflineMessage('Vibe saved offline. Will sync when online.');
       setSubmitted(true);
     }
@@ -93,6 +129,19 @@ export default function VibeCheckForm() {
           <CardTitle className="text-2xl">Loading...</CardTitle>
           <CardDescription>
             Checking your vibe status for today.
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  if (!relationship) {
+    return (
+      <Card className="mx-auto max-w-sm">
+        <CardHeader>
+          <CardTitle className="text-2xl">No Relationship Found</CardTitle>
+          <CardDescription>
+            You need to be in a relationship to submit a vibe.
           </CardDescription>
         </CardHeader>
       </Card>

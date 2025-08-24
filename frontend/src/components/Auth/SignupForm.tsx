@@ -3,23 +3,33 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import api, { getCsrfCookie } from "~/lib/api";
+import { getCsrfCookie, registerUser } from "~/lib/api";
+import { useUser } from "~/contexts/UserContext";
+import { useNavigate } from "react-router-dom";
 
 export default function SignupForm() {
+  const { login } = useUser();
+  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
     await getCsrfCookie();
     try {
-      const response = await api.post('/auth/register', { name, email, password });
-      console.log(response.data);
-      // Handle successful registration, e.g., redirect to login
-    } catch (error) {
+      const response = await registerUser({ name, email, password });
+      login(response.data.user);
+      navigate('/dashboard');
+    } catch (error: any) {
       console.error(error);
-      // Handle registration error
+      setError(error.response?.data?.message || 'Failed to register. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -33,6 +43,7 @@ export default function SignupForm() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="grid gap-4">
+          {error && <p className="text-red-500">{error}</p>}
           <div className="grid gap-2">
             <Label htmlFor="name">Name</Label>
             <Input id="name" placeholder="Your name" required value={name} onChange={(e) => setName(e.target.value)} />
@@ -52,8 +63,8 @@ export default function SignupForm() {
             <Label htmlFor="password">Password</Label>
             <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
-          <Button type="submit" className="w-full">
-            Create an account
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? 'Creating account...' : 'Create an account'}
           </Button>
         </form>
       </CardContent>

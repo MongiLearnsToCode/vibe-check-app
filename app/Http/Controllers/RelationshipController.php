@@ -47,4 +47,16 @@ class RelationshipController extends Controller
 
         return response()->json($relationship->load('users'));
     }
+
+    public function show(Request $request)
+    {
+        $user = Auth::user();
+        $relationship = $user->relationships()->first();
+
+        if (!$relationship) {
+            return response()->json(['message' => 'You are not in a relationship.'], 404);
+        }
+
+        return response()->json($relationship->load('users'));
+    }
 }

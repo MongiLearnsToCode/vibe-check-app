@@ -3,22 +3,33 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import api, { getCsrfCookie } from "~/lib/api";
+import api, { getCsrfCookie, loginUser } from "~/lib/api";
+import { useUser } from "~/contexts/UserContext";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginForm() {
+  const { login } = useUser();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
     await getCsrfCookie();
+    
     try {
-      const response = await api.post('/auth/login', { email, password });
-      console.log(response.data);
-      // Handle successful login, e.g., redirect to dashboard
-    } catch (error) {
+      const response = await loginUser({ email, password });
+      login(response.data.user);
+      navigate('/dashboard');
+    } catch (error: any) {
       console.error(error);
-      // Handle login error
+      setError(error.response?.data?.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -31,6 +42,7 @@ export default function LoginForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {error && <div className="text-red-500 mb-4">{error}</div>}
         <form onSubmit={handleSubmit} className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
@@ -49,8 +61,8 @@ export default function LoginForm() {
             </div>
             <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
-          <Button type="submit" className="w-full">
-            Login
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? 'Logging in...' : 'Login'}
           </Button>
         </form>
       </CardContent>

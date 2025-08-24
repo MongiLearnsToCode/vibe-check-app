@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Vibe;
 use App\Models\Relationship;
+use App\Models\Vibe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
@@ -30,7 +30,7 @@ class VibeController extends Controller
             ->exists();
 
         if ($existingVibe) {
-            return response()->json(['message' => 'You have already submitted your vibe for today.'], 400);
+            return response()->json(['message' => 'You have already submitted your vibe for today.'], 409);
         }
 
         $vibe = Vibe::create([
@@ -44,9 +44,30 @@ class VibeController extends Controller
         return response()->json($vibe, 201);
     }
 
+    public function check(Request $request)
+    {
+        $user = Auth::user();
+        $relationship = $user->relationships()->first();
+
+        if (!$relationship) {
+            return response()->json(['submitted' => false]);
+        }
+
+        $existingVibe = Vibe::where('user_id', $user->id)
+            ->where('relationship_id', $relationship->id)
+            ->whereDate('created_at', today())
+            ->exists();
+
+        return response()->json(['submitted' => $existingVibe]);
+    }
+
     public function index(Relationship $relationship)
     {
-        $this->authorize('view', $relationship);
+        // Check if the authenticated user belongs to this relationship
+        $user = Auth::user();
+        if (!$relationship->users->contains($user)) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
 
         $vibes = Vibe::where('relationship_id', $relationship->id)
             ->where('date', '>=', today()->subDays(7))

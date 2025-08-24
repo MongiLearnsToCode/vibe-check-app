@@ -7,6 +7,7 @@ import Login from './pages/Login.tsx'
 import Signup from './pages/Signup.tsx'
 import VibeCheck from './pages/VibeCheck.tsx'
 import DashboardPage from './pages/Dashboard.tsx'
+import { UserProvider } from './contexts/UserContext.tsx'
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <UserProvider>
+      <RouterProvider router={router} />
+    </UserProvider>
   </StrictMode>,
 )

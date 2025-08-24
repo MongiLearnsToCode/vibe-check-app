@@ -97,30 +97,30 @@ Each main task includes subtasks to guide development, testing, and deployment.
 
 ## ✅ 6. Offline Sync Functionality
 
-- [ ] On vibe submit:
-  - [ ] Check network status
-  - [ ] If online → send to `/api/vibes`
-  - [ ] If offline → save to `localStorage` with timestamp and relationship ID
-- [ ] On app load:
-  - [ ] Check `localStorage` for unsent vibes
-  - [ ] Attempt to sync pending entries to API
-  - [ ] Remove from `localStorage` after successful sync
-- [ ] Show user feedback: “Vibe saved offline. Will sync when online.”
+- [x] On vibe submit:
+  - [x] Check network status
+  - [x] If online → send to `/api/vibes`
+  - [x] If offline → save to `localStorage` with timestamp and relationship ID
+- [x] On app load:
+  - [x] Check `localStorage` for unsent vibes
+  - [x] Attempt to sync pending entries to API
+  - [x] Remove from `localStorage` after successful sync
+- [x] Show user feedback: "Vibe saved offline. Will sync when online."
 
 ---
 
 ## ✅ 7. API & Frontend Integration
 
-- [ ] Set up Axios instance in `lib/api.ts`
-- [ ] Implement API service functions:
-  - [ ] `registerUser()`
-  - [ ] `loginUser()`
-  - [ ] `createRelationship()`
-  - [ ] `joinRelationship(code)`
-  - [ ] `submitVibe(mood, note)`
-  - [ ] `getVibes(relationshipId)`
-- [ ] Handle loading and error states in UI
-- [ ] Test all API calls with Postman or browser dev tools
+- [x] Set up Axios instance in `lib/api.ts`
+- [x] Implement API service functions:
+  - [x] `registerUser()`
+  - [x] `loginUser()`
+  - [x] `createRelationship()`
+  - [x] `joinRelationship(code)`
+  - [x] `submitVibe(mood, note)`
+  - [x] `getVibes(relationshipId)`
+- [x] Handle loading and error states in UI
+- [x] Test all API calls with Postman or browser dev tools
 
 ---
 
